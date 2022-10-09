@@ -12,16 +12,17 @@ class Matchbox:
         for i in self.grid:
             # print(i)
             for j in i:
-                if j != 0 or "x" or "o": #i.e there is a bead that can be placed
-                    new_grid = self.grid
-                    index_of_placing = np.where(new_grid == j)
-                    print(index_of_placing)
-                    #new_grid[altered_row][altered_element_index] = "x"
-                    # MB.boxtreeroot.append(Matchbox(new_grid))
+                if j != 0 and "x" and "o": #i.e there is a bead that can be placed
+                   index_available_placement = np.where(self.grid == j)
+                   tupled = zip(index_available_placement[0],index_available_placement[1]) # zip changes it to tuples of
+                                                           # form (i, j) where i is row and j is index inside the row
+
+                   # print(index_available_placement)
+
 
 
                     # add some zeroes
-                    # mb.boxtreeroot[-1].spawn() need to create a method that would spawn a grid with suitable amount of beads.
+                    # mb.boxtreeroot[-1].spawn() todo need to create a method that would spawn a grid with suitable amount of beads.
 
     def place_a_bead(self):
         available_places = []
@@ -56,3 +57,5 @@ class Matchboxes:
 MB = Matchboxes()
 MB.boxtreeroot.append(Matchbox([[8, 8, 0], [0, 8, 0], [0, 0, 0]]))
 MB.boxtreeroot[0].spawn_from_first_layer()
+
+
