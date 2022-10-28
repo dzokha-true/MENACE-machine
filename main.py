@@ -1,4 +1,4 @@
-import random, pickle, numpy as np
+import random, pickle, numpy as np, copy
 
 
 class Matchbox:
@@ -18,7 +18,7 @@ class Matchbox:
                     for tuple in tupled:
                         print(f"this is the zip list rn {list(tupled)}")
                         print(f"this is the tuple rn {tuple}")
-                        new_grid = self.grid
+                        new_grid = copy.deepcopy(self.grid)
                         new_grid[tuple[0]][tuple[1]] = "x"  # creating a new grid where menace puts an x
                         print(f"this is the self grid {MB.boxtreeroot[-1].grid}")
                         MB.boxtreeroot.append(Matchbox(new_grid))
