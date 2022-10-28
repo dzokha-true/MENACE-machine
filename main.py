@@ -15,11 +15,10 @@ class Matchbox:
                     index_available_placement = np.where(self.grid == j)
                     tupled = zip(index_available_placement[0],index_available_placement[1]) # zip changes it to tuples of
                                                             # form (i, j) where i is row and j is index inside the row
-                    for tuple in tupled:
-                        print(f"this is current tuple: {tuple}\nfrom this list: {list(tupled)}")
-                        new_grid = copy.deepcopy(self.grid) # creating a new grid where menace puts an x
-                        new_grid[tuple[0]][tuple[1]] = "x"  #putting a new x
-                        MB.boxtreeroot.append(Matchbox(new_grid))
+        for tuple in list(tupled):
+            new_grid = copy.deepcopy(self.grid) # creating a new grid where menace puts an x
+            new_grid[tuple[0]][tuple[1]] = "x"  #putting a new x
+            MB.boxtreeroot.append(Matchbox(new_grid))
 
 
 
@@ -61,5 +60,8 @@ MB.boxtreeroot.append(Matchbox([[8, 8, 0], [0, 8, 0], [0, 0, 0]]))
 MB.boxtreeroot[0].spawn_from_first_layer()
 print(len(MB.boxtreeroot))
 print(MB.boxtreeroot[0].grid)
+print(MB.boxtreeroot[1].grid)
+print(MB.boxtreeroot[2].grid)
+print(MB.boxtreeroot[3].grid)
 
 
