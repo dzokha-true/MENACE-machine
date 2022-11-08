@@ -4,9 +4,11 @@ import random, pickle, numpy as np, copy
 class Matchbox:
     """ this class takes 2 dimensional array as an representation of game state which it will represent.
         it must be in a form of ( array1, array2, array3 ) where arrays reoresent the game state as individual row  """
-    def __init__(self, setup: list):
+    def __init__(self, setup: list, parent_nodes: list, children_nodes: list):
         self.grid = setup
         self.grid = np.array(self.grid, dtype='O')
+        self.parent_nodes = []
+        self.children_nodes = []
 
     def spawn_from_first_layer(self):
         for i in self.grid:
@@ -18,8 +20,12 @@ class Matchbox:
         for tuple in list(tupled):
             new_grid = copy.deepcopy(self.grid) # creating a new grid where menace puts an x
             new_grid[tuple[0]][tuple[1]] = "x"  #putting a new x
-            MB.boxtreeroot.append(Matchbox(new_grid))
+            MB.boxtreeroot.append(Matchbox(new_grid, MB.boxtreeroot))
 
+    def spawn_from_second_layer(self):
+        for current_state in MB.boxtreeroot:
+            if "x" in current_state.grid:
+                pass
 
 
                     # add some zeroes
@@ -44,24 +50,24 @@ class Matchbox:
 
     def rotate(self):
         self.grid = np.fliplr(np.array(self.grid).T.tolist())
+        return self.grid
 
-    def check_if_duplicate(self):
-        pass
+    def check_if_duplicate(self, grid, array):
+        for i in range(4):
+            if grid.rotate() in array:
+                array.pop(array.index(grid.rotate))
 
 
 class Matchboxes:
-    """ this is a object which is basically a array which can be accessed inside the matchbox class"""
+    """ this is a object which is basically an array which can be accessed inside the matchbox class"""
     def __init__(self):
-        self.boxtreeroot = []
+        self.boxtreeroot = Matchbox([[8, 8, 0], [0, 8, 0], [0, 0, 0]]) #a starting game state which is never changed.
 
 
 MB = Matchboxes()
-MB.boxtreeroot.append(Matchbox([[8, 8, 0], [0, 8, 0], [0, 0, 0]]))
 MB.boxtreeroot[0].spawn_from_first_layer()
 print(len(MB.boxtreeroot))
 print(MB.boxtreeroot[0].grid)
-print(MB.boxtreeroot[1].grid)
+print(MB.boxtreeroot[1].rotate())
 print(MB.boxtreeroot[2].grid)
 print(MB.boxtreeroot[3].grid)
-
-
