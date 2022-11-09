@@ -49,8 +49,28 @@ class Matchbox:
                 print(self.grid)
                 Failed = False
 
+    def put_nodes_everywhere(self):
+        i = -1
+        for row in self.grid:
+            i += 1
+            j = -1
+            for column in row:
+                j += 1
+                if column != 'x' and 'o':
+                    new_grid = copy.deepcopy(self.grid)
+                    new_grid[i][j]
+                    self.children_nodes.append(new_grid)
+                else:
+                    pass
+
+
     def spawn_from_second_layer(self):
-        pass
+            pass
+        #for current_state in MB.boxtreeroot.children_nodes:
+        #    for row in range(len(current_state.grid))
+        #        for column in row:
+        #            if column != 'x' or 'o'
+
 
     def spawn_from_third_layer(self):
         pass
@@ -80,4 +100,5 @@ print(MB.boxtreeroot.grid)
 print(MB.boxtreeroot.children_nodes[0].grid)
 print(MB.boxtreeroot.children_nodes[1].grid)
 print(MB.boxtreeroot.children_nodes[2].grid)
-MB.boxtreeroot.children_nodes[random.randint(0, 2)].Player_placing_a_bead()
+MB.boxtreeroot.children_nodes[0].put_nodes_everywhere()
+print(len(MB.boxtreeroot.children_nodes[0].children_nodes))
