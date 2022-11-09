@@ -20,16 +20,12 @@ class Matchbox:
         for tuple in list(tupled):
             new_grid = copy.deepcopy(self.grid) # creating a new grid where menace puts an x
             new_grid[tuple[0]][tuple[1]] = "x"  #putting a new x
-            MB.boxtreeroot.append(Matchbox(new_grid, MB.boxtreeroot))
+            MB.boxtreeroot.children_nodes.append(Matchbox(new_grid, MB.boxtreeroot, []))
 
     def spawn_from_second_layer(self):
         for current_state in MB.boxtreeroot:
             if "x" in current_state.grid:
                 pass
-
-
-                    # add some zeroes
-                    # mb.boxtreeroot[-1].spawn() todo need to create a method that would spawn a grid with suitable amount of beads.
 
     def place_a_bead(self):
         available_places = []
@@ -38,6 +34,20 @@ class Matchbox:
                 if j != 0 or "x" or "o":
                     available_places.append([i, j])
         print(available_places)
+
+    def Player_placing_a_bead(self):
+        Failed = True
+        while Failed == True:
+            print(f"\n\nHere is the current grid! \n{self.grid}")
+            position = input("please enter coordinates for your choice\n"
+                             "Make sure you put them in a 'x,y' (without quotation marks and no larger than 2, start from 0)"
+                             " format wherex is a row and y is a column ") #TODO put try, except ValueError catch
+            position = tuple(int(x) for x in position.split(","))
+            print(position)
+            if self.grid[position[0]][position[1]] != "x":
+                self.grid[position[0]][position[1]] = "o"
+                print(self.grid)
+                Failed = False
 
     def spawn_from_second_layer(self):
         pass
@@ -55,19 +65,19 @@ class Matchbox:
     def check_if_duplicate(self, grid, array):
         for i in range(4):
             if grid.rotate() in array:
-                array.pop(array.index(grid.rotate))
+                return True
 
 
 class Matchboxes:
     """ this is a object which is basically an array which can be accessed inside the matchbox class"""
     def __init__(self):
-        self.boxtreeroot = Matchbox([[8, 8, 0], [0, 8, 0], [0, 0, 0]]) #a starting game state which is never changed.
+        self.boxtreeroot = Matchbox([[8, 8, 0], [0, 8, 0], [0, 0, 0]], None, []) #a starting game state which is never changed.
 
 
 MB = Matchboxes()
-MB.boxtreeroot[0].spawn_from_first_layer()
-print(len(MB.boxtreeroot))
-print(MB.boxtreeroot[0].grid)
-print(MB.boxtreeroot[1].rotate())
-print(MB.boxtreeroot[2].grid)
-print(MB.boxtreeroot[3].grid)
+MB.boxtreeroot.spawn_from_first_layer()
+print(MB.boxtreeroot.grid)
+print(MB.boxtreeroot.children_nodes[0].grid)
+print(MB.boxtreeroot.children_nodes[1].grid)
+print(MB.boxtreeroot.children_nodes[2].grid)
+MB.boxtreeroot.children_nodes[random.randint(0, 2)].Player_placing_a_bead()
