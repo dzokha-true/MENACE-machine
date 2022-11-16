@@ -42,7 +42,9 @@ class Matchbox:
                 if column != 'x' and 'o':
                     new_grid = copy.deepcopy(self.grid)
                     new_grid[i][j] = 'o'
-                    self.children_nodes.append(new_grid)
+                    # self.children_nodes.append(Matchbox(new_grid, self, None))
+                    #TODO change the line above so that it is not a new layer in the tree but actually appended to the
+                    # same layer deleting the one wher ethere is no nodes everywhere
                 else:
                     pass
 
@@ -68,10 +70,42 @@ class Matchbox:
                     else:
                         pass
             MB.boxtreeroot.children_nodes.append(Matchbox(new_grid, MB.boxtreeroot, []))
-
-    def spawn_third_layer(self):
         for current_state in MB.boxtreeroot.children_nodes:
             current_state.put_nodes_everywhere()
+            #todo make sure that those current state put nodes everywhere don't go into children nodes but actuallt change the current state itself.
+
+    def spawn_third_layer(self):
+        i = 0
+        for i in range(len(MB.boxtreeroot.children_nodes)):
+            for current_state in MB.boxtreeroot.children_nodes[i].children_nodes:
+                i = -1
+                for row in current_state.grid:
+                    i += 1
+                    j = -1
+                    for column in row:
+                        j+=1
+                        if column != "o" and column != "x":     #puts x
+                            new_grid = copy.deepcopy(current_state.grid)
+                            new_grid[i][j] = "x"
+
+                            k = -1
+                            for row in new_grid:    # changes 4s to 2s
+                                x = -1
+                                k +=1
+                                for column in row:
+                                    x+=1
+                                    if column != "x" and column != "o":
+                                        new_grid[k][x] = 2
+                            current_state.children_nodes.append(Matchbox(new_grid, current_state, None))
+        #todo put an o, also make sure that o's are there before you append new grid to children nodes of matchbox
+
+
+
+        # for parent_state in MB.boxtreeroot.children_nodes:
+        #     for current_state in parent_state:
+        #         pass
+
+
 
 
 
@@ -105,6 +139,11 @@ class Matchboxes:
 
 MB = Matchboxes()
 MB.boxtreeroot.summon_the_machine()
-for i in range(3):
-    for hehe in range(8):
-        print(MB.boxtreeroot.children_nodes[i].children_nodes[hehe])
+# for i in range(3):
+#     for hehe in range(8):
+#         print(MB.boxtreeroot.children_nodes[i].children_nodes[hehe])
+
+for i in MB.boxtreeroot.children_nodes:
+    for j in i.children_nodes:
+        for k in j.children_nodes:
+            print(k.grid)
