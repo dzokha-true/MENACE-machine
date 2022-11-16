@@ -10,23 +10,6 @@ class Matchbox:
         self.parent_nodes = []
         self.children_nodes = []
 
-    def spawn_from_first_layer(self):
-        for i in self.grid:
-            for j in i:
-                if j != 0 and "x" and "o": #i.e there is a bead that can be placed
-                    index_available_placement = np.where(self.grid == j)
-                    tupled = zip(index_available_placement[0],index_available_placement[1]) # zip changes it to tuples of
-                                                            # form (i, j) where i is row and j is index inside the row
-        for tuple in list(tupled):
-            new_grid = copy.deepcopy(self.grid) # creating a new grid where menace puts an x
-            new_grid[tuple[0]][tuple[1]] = "x"  #putting a new x
-            MB.boxtreeroot.children_nodes.append(Matchbox(new_grid, MB.boxtreeroot, []))
-
-    def spawn_from_second_layer(self):
-        for current_state in MB.boxtreeroot:
-            if "x" in current_state.grid:
-                pass
-
     def place_a_bead(self):
         available_places = []
         for i in self.grid:
@@ -58,24 +41,44 @@ class Matchbox:
                 j += 1
                 if column != 'x' and 'o':
                     new_grid = copy.deepcopy(self.grid)
-                    new_grid[i][j]
+                    new_grid[i][j] = 'o'
                     self.children_nodes.append(new_grid)
                 else:
                     pass
 
+    def spawn_second_layer(self):
+        for i in self.grid:
+            for j in i:
+                if j != 0 and "x" and "o": #i.e there is a bead that can be placed
+                    index_available_placement = np.where(self.grid == j)
+                    tupled = zip(index_available_placement[0],index_available_placement[1]) # zip changes it to tuples of
+                                                            # form (i, j) where i is row and j is index inside the row
+        for tuple in list(tupled):
+            new_grid = copy.deepcopy(self.grid) # creating a new grid where menace puts an x
+            new_grid[tuple[0]][tuple[1]] = "x"  #putting a new x
+            i = -1
+            for row in new_grid:
+                i += 1
+                j = -1
+                for column in row:
+                    # break
+                    j += 1
+                    if column != 'x':
+                        new_grid[i][j] = 4
+                    else:
+                        pass
+            MB.boxtreeroot.children_nodes.append(Matchbox(new_grid, MB.boxtreeroot, []))
 
-    def spawn_from_second_layer(self):
-            pass
-        #for current_state in MB.boxtreeroot.children_nodes:
-        #    for row in range(len(current_state.grid))
-        #        for column in row:
-        #            if column != 'x' or 'o'
+    def spawn_third_layer(self):
+        for current_state in MB.boxtreeroot.children_nodes:
+            current_state.put_nodes_everywhere()
 
 
-    def spawn_from_third_layer(self):
+
+    def spawn_forth_layer(self):
         pass
 
-    def spawn_from_forth_layer(self):
+    def spawn_fifth_layer(self):
         pass
 
     def rotate(self):
@@ -87,6 +90,12 @@ class Matchbox:
             if grid.rotate() in array:
                 return True
 
+    def summon_the_machine(self):
+        self.spawn_second_layer()
+        self.spawn_third_layer()
+        self.spawn_forth_layer()
+        self.spawn_fifth_layer()
+
 
 class Matchboxes:
     """ this is a object which is basically an array which can be accessed inside the matchbox class"""
@@ -95,10 +104,7 @@ class Matchboxes:
 
 
 MB = Matchboxes()
-MB.boxtreeroot.spawn_from_first_layer()
-print(MB.boxtreeroot.grid)
-print(MB.boxtreeroot.children_nodes[0].grid)
-print(MB.boxtreeroot.children_nodes[1].grid)
-print(MB.boxtreeroot.children_nodes[2].grid)
-MB.boxtreeroot.children_nodes[0].put_nodes_everywhere()
-print(len(MB.boxtreeroot.children_nodes[0].children_nodes))
+MB.boxtreeroot.summon_the_machine()
+for i in range(3):
+    for hehe in range(8):
+        print(MB.boxtreeroot.children_nodes[i].children_nodes[hehe])
