@@ -4,11 +4,11 @@ import random, pickle, numpy as np, copy
 class Matchbox:
     """ this class takes 2 dimensional array as an representation of game state which it will represent.
         it must be in a form of ( array1, array2, array3 ) where arrays reoresent the game state as individual row  """
-    def __init__(self, setup: list, parent_nodes: list, children_nodes: list):
+    def __init__(self, setup: list, parent_node: list, children_nodes: list):
         self.grid = setup
         self.grid = np.array(self.grid, dtype='O')
-        self.parent_nodes = []
-        self.children_nodes = []
+        self.parent_node = parent_node
+        self.children_nodes = children_nodes
 
     def place_a_bead(self):
         available_places = []
@@ -33,6 +33,7 @@ class Matchbox:
                 Failed = False
 
     def put_nodes_everywhere(self):
+        output = []
         i = -1
         for row in self.grid:
             i += 1
@@ -42,13 +43,18 @@ class Matchbox:
                 if column != 'x' and 'o':
                     new_grid = copy.deepcopy(self.grid)
                     new_grid[i][j] = 'o'
-                    # self.children_nodes.append(Matchbox(new_grid, self, None))
-                    #TODO change the line above so that it is not a new layer in the tree but actually appended to the
-                    # same layer deleting the one wher ethere is no nodes everywhere
+                    output.append(new_grid)
                 else:
                     pass
+        location = self.parent_node.children_nodes.index(self)
+        print(location)
+        self.parent_node.children_nodes.pop(location)
+        return output
+                    #TODO change the line above so that it is not a new layer in the tree but actually appended to the
+                    # same layer deleting the one wher ethere is no nodes everywhere
 
     def spawn_second_layer(self):
+        parent_node = MB.boxtreeroot
         for i in self.grid:
             for j in i:
                 if j != 0 and "x" and "o": #i.e there is a bead that can be placed
@@ -63,41 +69,49 @@ class Matchbox:
                 i += 1
                 j = -1
                 for column in row:
-                    # break
                     j += 1
                     if column != 'x':
                         new_grid[i][j] = 4
                     else:
                         pass
-            MB.boxtreeroot.children_nodes.append(Matchbox(new_grid, MB.boxtreeroot, []))
+            MB.boxtreeroot.children_nodes.append(Matchbox(new_grid, parent_node, []))
+        collection_of_new_grids = []
         for current_state in MB.boxtreeroot.children_nodes:
-            current_state.put_nodes_everywhere()
+            new_grids = current_state.put_nodes_everywhere()
+            collection_of_new_grids.append(new_grids)
+        for i in collection_of_new_grids:
+            for new_matchbox in i:
+                MB.boxtreeroot.children_nodes.append((Matchbox(new_matchbox, parent_node, None)))
             #todo make sure that those current state put nodes everywhere don't go into children nodes but actuallt change the current state itself.
 
     def spawn_third_layer(self):
-        i = 0
-        for i in range(len(MB.boxtreeroot.children_nodes)):
-            for current_state in MB.boxtreeroot.children_nodes[i].children_nodes:
-                i = -1
-                for row in current_state.grid:
-                    i += 1
-                    j = -1
-                    for column in row:
-                        j+=1
-                        if column != "o" and column != "x":     #puts x
-                            new_grid = copy.deepcopy(current_state.grid)
-                            new_grid[i][j] = "x"
-
-                            k = -1
-                            for row in new_grid:    # changes 4s to 2s
-                                x = -1
-                                k +=1
-                                for column in row:
-                                    x+=1
-                                    if column != "x" and column != "o":
-                                        new_grid[k][x] = 2
-                            current_state.children_nodes.append(Matchbox(new_grid, current_state, None))
+        # i = 0
+        # for i in range(len(MB.boxtreeroot.children_nodes)):
+        #     for current_state in MB.boxtreeroot.children_nodes[i].children_nodes:
+        #         i = -1
+        #         for row in current_state.grid:
+        #             i += 1
+        #             j = -1
+        #             for column in row:
+        #                 j+=1
+        #                 if column != "o" and column != "x":     #puts x
+        #                     new_grid = copy.deepcopy(current_state.grid)
+        #                     new_grid[i][j] = "x"
+        #
+        #                     k = -1
+        #                     for row in new_grid:    # changes 4s to 2s
+        #                         x = -1
+        #                         k +=1
+        #                         for column in row:
+        #                             x+=1
+        #                             if column != "x" and column != "o":
+        #                                 new_grid[k][x] = 2
+        #                     current_state.children_nodes.append(Matchbox(new_grid, current_state, None))
+        pass
         #todo put an o, also make sure that o's are there before you append new grid to children nodes of matchbox
+        #todo rewrite the logics as I have change the layer structure and now I must change the for conditions because
+        # there is less layers now (I have combined the previous two layers into one (one of the them mwas just x, other
+        # was x and o's))
 
 
 
@@ -139,11 +153,6 @@ class Matchboxes:
 
 MB = Matchboxes()
 MB.boxtreeroot.summon_the_machine()
-# for i in range(3):
-#     for hehe in range(8):
-#         print(MB.boxtreeroot.children_nodes[i].children_nodes[hehe])
 
 for i in MB.boxtreeroot.children_nodes:
-    for j in i.children_nodes:
-        for k in j.children_nodes:
-            print(k.grid)
+    print(i.grid)
