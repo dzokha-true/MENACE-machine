@@ -47,11 +47,10 @@ class Matchbox:
                 else:
                     pass
         location = self.parent_node.children_nodes.index(self)
-        print(location)
+        print("location is: ", location)
+        print("ama gona pop this; ", self.parent_node.children_nodes[location].grid)
         self.parent_node.children_nodes.pop(location)
         return output
-                    #TODO change the line above so that it is not a new layer in the tree but actually appended to the
-                    # same layer deleting the one wher ethere is no nodes everywhere
 
     def spawn_second_layer(self):
         parent_node = MB.boxtreeroot
@@ -76,13 +75,15 @@ class Matchbox:
                         pass
             MB.boxtreeroot.children_nodes.append(Matchbox(new_grid, parent_node, []))
         collection_of_new_grids = []
+        for i in MB.boxtreeroot.children_nodes:
+            print(i.grid)
         for current_state in MB.boxtreeroot.children_nodes:
+            print("current state is: ", current_state.grid)
             new_grids = current_state.put_nodes_everywhere()
             collection_of_new_grids.append(new_grids)
         for i in collection_of_new_grids:
             for new_matchbox in i:
                 MB.boxtreeroot.children_nodes.append((Matchbox(new_matchbox, parent_node, None)))
-            #todo make sure that those current state put nodes everywhere don't go into children nodes but actuallt change the current state itself.
 
     def spawn_third_layer(self):
         # i = 0
