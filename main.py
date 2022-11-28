@@ -40,7 +40,7 @@ class Matchbox:
             j = -1
             for column in row:
                 j += 1
-                if column != 'x' and 'o':
+                if column != 'x' and column != 'o':
                     new_grid = copy.deepcopy(self.grid)
                     new_grid[i][j] = 'o'
                     output.append(new_grid)
