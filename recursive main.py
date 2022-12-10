@@ -13,7 +13,7 @@ class Matchbox:
         self.childnodes = childnodes
         self.beads = beads
         self.WhoseTurn = WhoseTurn
-        self.creating_child()
+        self.next_step()
 
     def place_beads(self):
         for i in range(1, 3):
@@ -24,7 +24,8 @@ class Matchbox:
     def next_step(self):
         self.beads = self.beads / 2
         if self.checking_win() == False:
-            pass
+            self.creating_child()
+            self.placing_beads()
         # checking winning
 
     def checking_win(self):
@@ -41,10 +42,15 @@ class Matchbox:
         if self.grid[2][0] == self.grid[2][1] == self.grid[2][2]:
             return True  # end of horziontal wins
         if self.grid[0][0] == self.grid[1][1] == self.grid[2][2]:
-            return True  # i am genuinely sorry that it looks so ugly, god will
-            # be my judge
+            return True  # i am genuinely sorry that it looks so ugly, god will be my judge
         if self.grid[0][2] == self.grid[1][1] == self.grid[2][0]:
             return True
+
+    def placing_beads(self):
+        for i in range(3):
+            for j in range(3):
+                if self.grid[i][j] != self.beads and self.grid[i][j] != 'x' and self.grid[i][j] != 'x':
+                    self.grid[i][j] = self.beads
 
     def creating_child(self):
         if self.WhoseTurn % 2 != 0:
@@ -54,6 +60,7 @@ class Matchbox:
                     new_grid = copy.deepcopy(self.grid)
                     if new_grid[i][j] != "x" and new_grid[i][j] != "o":
                         new_grid[i][j] = "x"
+                        print(new_grid)
                         self.childnodes.append(Matchbox(new_grid, [self], [], self.beads, self.WhoseTurn))
         elif self.WhoseTurn % 2 == 0:
             self.WhoseTurn += 1
