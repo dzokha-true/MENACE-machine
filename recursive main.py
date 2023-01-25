@@ -29,22 +29,26 @@ class Matchbox:
         # checking winning
 
     def checking_win(self):
-        if self.grid[0][0] == self.grid[1][0] == self.grid[2][0]:  # for all vertical wins
+        if self.grid[0][0] == 'x' or self.grid[0][0] == 'o' and self.grid[0][0] == self.grid[1][0] == self.grid[2][
+            0]:  # for all vertical wins
             return True
-        if self.grid[0][1] == self.grid[1][1] == self.grid[2][1]:
+        elif self.grid[0][1] == 'x' or self.grid[0][1] == 'o' and self.grid[0][1] == self.grid[1][1] == self.grid[2][1]:
             return True
-        if self.grid[0][2] == self.grid[1][2] == self.grid[2][2]:
+        elif self.grid[0][2] == 'x' or self.grid[0][2] == 'o' and self.grid[0][2] == self.grid[1][2] == self.grid[2][2]:
             return True  # end of vertical wins
-        if self.grid[0][0] == self.grid[0][1] == self.grid[0][2]:  # start of horizontal wins
+        elif self.grid[0][0] == 'x' or self.grid[0][0] == 'o' and self.grid[0][0] == self.grid[0][1] == self.grid[0][
+            2]:  # start of horizontal wins
             return True
-        if self.grid[1][0] == self.grid[1][1] == self.grid[1][2]:
+        elif self.grid[1][0] == 'x' or self.grid[1][0] == 'o' and self.grid[1][0] == self.grid[1][1] == self.grid[1][2]:
             return True
-        if self.grid[2][0] == self.grid[2][1] == self.grid[2][2]:
+        elif self.grid[2][0] == 'x' or self.grid[2][0] == 'o' and self.grid[2][0] == self.grid[2][1] == self.grid[2][2]:
             return True  # end of horziontal wins
-        if self.grid[0][0] == self.grid[1][1] == self.grid[2][2]:
+        elif self.grid[0][0] == 'x' or self.grid[0][0] == 'o' and self.grid[0][0] == self.grid[1][1] == self.grid[2][2]:
             return True  # i am genuinely sorry that it looks so ugly, god will be my judge
-        if self.grid[0][2] == self.grid[1][1] == self.grid[2][0]:
+        elif self.grid[0][2] == 'x' or self.grid[0][2] == 'o' and self.grid[0][2] == self.grid[1][1] == self.grid[2][0]:
             return True
+        else:
+            return False
 
     def placing_beads(self):
         for i in range(3):
