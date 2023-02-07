@@ -79,28 +79,49 @@ class Matchbox:
                         self.childnodes.append(Matchbox(new_grid, [self], [], self.beads, self.WhoseTurn))
 
     def user_go(self, grid):
-        return input(f" {grid[0]} \n {grid[1]}\n {grid[2]}\nPut your move in (row,column) format, with no space: ")
+        current_grid = grid
+        user_go = input(f" {grid[0]} \n {grid[1]}\n {grid[2]}\nPut your move in (row,column) format, with no space: ")
+        user_go = eval(user_go)
+        if type(user_go) != type((0,0)) or len(user_go) != 2 or type(grid[user_go[0]][user_go[1]]) != type(0): #checking if user_go is the right format
+                print(f"you have putted the answer in the wrong format, or used occupied cell. Please try again. ")
+                new_grid = self.user_go(grid)
+        else:
+            current_grid[user_go[0]][user_go[1]] = "o"
+            new_grid = current_grid
+        return new_grid
 
     def game(self):
         current_game_grid = copy.deepcopy(self.grid)
         self.count = 0
-        for row in range(0,2):
-            for col in range(0,2):
+        for row in range(0,3):
+            for col in range(0,3):
                 if self.grid[row][col] != 'x' and self.grid[row][col] != 'o':
                     self.count += self.grid[row][col]
+
         self.random_x = random.randint(0, self.count)
-        print(random_x)
-        for i in self.grid:
-            for row2 in range(0,2):
-                for col2 in range(0,2):
-                    if type(col2) == type(0):
-                        if self.count - col <= self.random_x:
-                            result(i, (row2, col2))
-                            break
-                        else:
-                            self.count -= col
-        # current_game_grid[row2][col2] = 'x'
-        # user_go_tuple = self.user_go(current_game_grid)
+        print(f"count is {self.count}")
+        print(f"random is {self.random_x}")
+        break_out_flag = False
+        for row2 in range(0,3):
+            for col2 in range(0,3):
+                if type(col2) == type(0):   #checking whether column in a row is an integer
+                    if self.random_x - self.grid[row2][col2] <= 0:
+                        print(f"triggered <=self.random_x {self.random_x}")
+                        print(f"row and col are {row2} {col2}")
+                        break_out_flag = True
+                        break
+                    else:
+                        self.random_x -= self.grid[row2][col2]
+                        print(f"self count is {self.random_x}")
+            if break_out_flag == True:
+                break
+        print(row2, col2)
+        current_game_grid[row2][col2] = 'x'
+        new_grid = self.user_go(current_game_grid)
+        print(new_grid)
+        # except What_ever_mistake:
+        #       print (hey whatcha tryna do brwoski)
+        #       user_go()
         # user_go_tuple = tuple(int(item) for item in user_go_tuple.split())
         # current_game_grid[user_go_tuple[0]][user_go_tuple[1]] = "o"
         # print(current_game_grid)
