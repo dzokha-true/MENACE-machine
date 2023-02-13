@@ -167,7 +167,7 @@ class Matchbox:
                 for col2 in range(0, 3):
                     print(f"random x is {random_x}")
                     if type(self.grid[row2][col2]) == type(0):  # checking whether column in a row is an integer
-                        if random_x - self.grid[row2][col2] <= 0:
+                        if random_x - self.grid[row2][col2] <= 0: #todo check indexing problem
                             break_out_flag = True
                             break
                         else:
