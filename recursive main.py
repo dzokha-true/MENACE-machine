@@ -22,7 +22,6 @@ class Matchbox:
         self.beads = beads
         self.WhoseTurn = WhoseTurn
         self.next_step()
-        self.placed_x = 0
 
     def next_step(self):
         """
@@ -144,7 +143,6 @@ class Matchbox:
         current_grid = copy.deepcopy(grid)
         user_go = input(f" {grid[0]} \n {grid[1]}\n {grid[2]}\nPut your move in (row,column) format, with no space: ")
         user_go = eval(user_go)
-        print(user_go)
         if type(user_go) != type((0, 0)) or len(user_go) != 2 or type(grid[user_go[0]][user_go[1]]) != type(
                 0):  # checking if user_go is the right format
             print(f"you have put the answer in the wrong format, or used occupied cell. Please try again. ")
@@ -187,26 +185,36 @@ class Matchbox:
                         self.row2 = row2
                         self.col2 = col2
                         self.placed_x = (self.row2, self.col2)
+                        print(self.placed_x)
                         break
-                self.result = self.childnodes[index].game()
+                result = self.childnodes[index].game()
                 print(self.placed_x)
-                if self.result == True:
-                    self.parentnode.grid[self.placed_x[0]][self.placed_x[1]] += 3
-                elif self.result == False:
-                    self.parentnode.grid[self.placed_x[0]][self.placed_x[1]] -= 2
+                if result[0] == "True":
+                    print(self.placed_x)
+                    self.grid[result[1][0]][result[1][1]] += 3
+                elif result[0] == "False":
+                    print(self.placed_x)
+                    self.grid[result[1][0]][result[1][1]] -= 2
             elif self.WhoseTurn % 2 == 0:
                 user_cords = self.user_go(self.grid)
                 index = ((3 * user_cords[0]) + (user_cords[1])) # calculates the index of the matchbox with the same game
                 # grid inside the childnode list.
-                self.result = self.childnodes[index].game()
-                if self.result == True:
-                    self.parentnode.grid[self.placed_x[0]][self.placed_x[1]] += 3
-                elif self.result == False:
-                    self.parentnode.grid[self.placed_x[0]][self.placed_x[1]] -= 2
+                result = self.childnodes[index].game()
+                print(result)
+                if result[0] == "True":
+                    print(self.placed_x)
+                    self.grid[result[1][0]][result[1][1]]
+                elif result[0] == "False":
+                    print(self.placed_x)
+                    self.grid[result[1][0]][result[1][1]]
             if self.checking_win()[1] == "Menace":
-                return True
+                list = ["True", self.placed_x]
+                print(list)
+                return list
             elif self.checking_win()[1] == "Player":
-                return False
+                list = ["False", self.placed_x]
+                print(list)
+                return list
 
 
 matchbox = Matchbox(GRIDS, [], [], beads, WhoseTurn=WHOSE_TURN_IS_IT)
