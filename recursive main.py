@@ -151,74 +151,63 @@ class Matchbox:
             return user_go
 
     def game(self):
-        if self.checking_win()[1] == "Menace":
+        if self.checking_win()[1] == "Menace": #if the menace hast won...
             print("Menace has won")
-            return True
-        elif self.checking_win()[1] == "Player":
+            return [True, "Menace"]
+        elif self.checking_win()[1] == "Player":  #or if the player hast won...
             print("Player has won")
-            return False
+            return [False, "Player"]
         elif self.checking_win()[0] is False:
-            if self.WhoseTurn % 2 != 0:
+            if self.WhoseTurn % 2 != 0:   # if the matchbox has a turn for MENACE...
                 count = 0
                 for row in range(0, 3):
                     for col in range(0, 3):
                         if self.grid[row][col] != 'x' and self.grid[row][col] != 'o':
-                            count += self.grid[row][col]      #count the total number of beads
+                            count += self.grid[row][col]      #...count the total number of beads...
 
-                random_x = random.randint(0, count)       #set the random number
+                random_x = random.randint(0, count)       #...set the random number...
                 break_out_flag = False
-                index = 0           #set the index of the game.
-                for row2 in range(0, 3):
+                index = 0           #index will be used to locate matchbox inside childnode that is same for current gametstate
+                for row2 in range(0, 3): #start process of MENACE choosing where to place an x
                     for col2 in range(0, 3):
                         print(f"random x is {random_x}")
                         if type(self.grid[row2][col2]) == type(0):  # checking whether column in a row is an integer
-                            if random_x - self.grid[row2][col2] <= 0: #todo check indexing problem
-                                break_out_flag = True
+                            if random_x - self.grid[row2][col2] <= 0:
+                                break_out_flag = True  #if this cell is choosen by MENACE, set the loopbreaker to True
                                 break
                             else:
-                                random_x -= self.grid[row2][col2]
+                                random_x -= self.grid[row2][col2] #otherwise continue, and increment an x
                                 index += 1
                         else:
-                            index += 1
+                            index += 1 # if the cell wasn't integer, skip it and increment the index by one (cause it cant be menace's choice)
                             pass
-                    if break_out_flag:
+                    if break_out_flag: #if the MENACE made its choice...
                         self.row2 = row2
                         self.col2 = col2
-                        self.placed_x = (self.row2, self.col2)
-                        print(self.placed_x)
-                        break
-                result = self.childnodes[index].game()
-                print(self.placed_x)
-                if result[0] == "True":
-                    print(self.placed_x)
-                    self.grid[result[1][0]][result[1][1]] += 3
-                elif result[0] == "False":
-                    print(self.placed_x)
-                    self.grid[result[1][0]][result[1][1]] -= 2
+                        self.placed_x = (self.row2, self.col2) #remember where it has placed its' x
+                        break #and break
+                result = self.childnodes[index].game() #call the next game with that index.
+                print(result)
+                if (result[0] == True):
+                    self.grid[self.placed_x[0]][self.placed_x[1]] += 3
+                    return [True, "Menace"]
+                elif (result[0] == False):
+                    self.grid[self.placed_x[0]][self.placed_x[1]] -= 2
+                    return [False, "Player"]
             elif self.WhoseTurn % 2 == 0:
                 user_cords = self.user_go(self.grid)
                 index = ((3 * user_cords[0]) + (user_cords[1])) # calculates the index of the matchbox with the same game
-                # grid inside the childnode list.
+                                                                # grid inside the childnode list.
                 result = self.childnodes[index].game()
                 print(result)
-                if result[0] == "True":
-                    print(self.placed_x)
-                    self.grid[result[1][0]][result[1][1]]
-                elif result[0] == "False":
-                    print(self.placed_x)
-                    self.grid[result[1][0]][result[1][1]]
-            if self.checking_win()[1] == "Menace":
-                list = ["True", self.placed_x]
-                print(list)
-                return list
-            elif self.checking_win()[1] == "Player":
-                list = ["False", self.placed_x]
-                print(list)
-                return list
-
+                if result[0] == True:
+                    return [True, "Menace"]
+                elif result[0] == False:
+                    return [False, "Player"]
 
 matchbox = Matchbox(GRIDS, [], [], beads, WhoseTurn=WHOSE_TURN_IS_IT)
 user_decided = int(input("please input the number of times you want to play a game please "))
 for i in range(user_decided):
     matchbox.game()
+print(matchbox.grid)
 # print(f"\n\nParent node is {matchbox.childnodes[0].grid}, Whoseturn {matchbox.childnodes[0].WhoseTurn}\n childnode is {matchbox.childnodes[0].childnodes[2].grid}\n\n")
