@@ -125,11 +125,9 @@ class Matchbox:
                     new_grid = copy.deepcopy(self.grid)
                     if self.grid[i][j] != "x" and self.grid[i][j] != "o":
                         new_grid[i][j] = "o"
-                        # print(f"flag one 1\n\nnew grid is {new_grid}")
                         self.childnodes.append(Matchbox(new_grid, self, [], self.beads, thingy)) #TODO change thingy to WhoseTurn + 1
 
                     else:
-                        # print(f"flag 2\n")
                         self.childnodes.append(None)
 
     def user_go(self, grid):
@@ -141,12 +139,13 @@ class Matchbox:
         :return: the coordinates that player has chosen for their go.
         """
         current_grid = copy.deepcopy(grid)
-        user_go = input(f" {grid[0]} \n {grid[1]}\n {grid[2]}\nPut your move in (row,column) format, with no space: ")
-        user_go = eval(user_go)
-        if type(user_go) != type((0, 0)) or len(user_go) != 2 or type(grid[user_go[0]][user_go[1]]) != type(
+        user_go = None
+        while type(user_go) != type((0, 0)) or len(user_go) != 2 or type(grid[user_go[0]][user_go[1]]) != type(
                 0):  # checking if user_go is the right format
             print(f"you have put the answer in the wrong format, or used occupied cell. Please try again. ")
-            self.user_go(grid)
+            user_go = input(
+                f" {grid[0]} \n {grid[1]}\n {grid[2]}\nPut your move in (row,column) format, with no space: ")
+            user_go = eval(user_go)
         else:
             return user_go
 
@@ -170,7 +169,6 @@ class Matchbox:
                 index = 0           #index will be used to locate matchbox inside childnode that is same for current gametstate
                 for row2 in range(0, 3): #start process of MENACE choosing where to place an x
                     for col2 in range(0, 3):
-                        print(f"random x is {random_x}")
                         if type(self.grid[row2][col2]) == type(0):  # checking whether column in a row is an integer
                             if random_x - self.grid[row2][col2] <= 0:
                                 break_out_flag = True  #if this cell is choosen by MENACE, set the loopbreaker to True
@@ -199,7 +197,6 @@ class Matchbox:
                 index = ((3 * user_cords[0]) + (user_cords[1])) # calculates the index of the matchbox with the same game
                                                                 # grid inside the childnode list.
                 result = self.childnodes[index].game()
-                print(result)
                 if result[0] == True:
                     return [True, "Menace"]
                 elif result[0] == False:
