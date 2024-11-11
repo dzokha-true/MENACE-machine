@@ -203,7 +203,7 @@ class Matchbox:
                     return [False, "Player"]
 
 matchbox = Matchbox(GRIDS, [], [], beads, WhoseTurn=WHOSE_TURN_IS_IT)
-user_decided = int(input("please input the number of times you want to play a game please "))
+user_decided = int(input("please input the number of times you want to play a game "))
 for i in range(user_decided):
     matchbox.game()
 print(matchbox.grid)
